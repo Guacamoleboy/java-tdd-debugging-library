@@ -9,56 +9,50 @@ import java.util.List;
 public class User {
 
     // Attributes
-
-    // BUG: eksponerer intern tilstand via getter (returnerer direkte liste)
     private final String name;
     private final List<Book> borrowedBooks = new ArrayList<>();
 
-    // ____________________________________________________
+    // _________________________________________________________
 
     public User(String name) {
         this.name = name;
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
     public String getName() {
         return name;
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
-    // BUG: tillader 4 bøger
     public boolean borrowBook(Book b) {
-        if (borrowedBooks.size() <= 3) {
+        if (borrowedBooks.size() < 3) {
             borrowedBooks.add(b);
             return true;
         }
         return false;
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
     public boolean hasBook(Book b) {
         return borrowedBooks.contains(b);
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
-    // BUG: fjerner via en ny instans (afhænger af equals-implementering)
     public boolean returnBook(Book b) {
-        Book tmp = new Book(b.getTitle(), b.getAuthor(), b.getIsbn());
-        return borrowedBooks.remove(tmp);
+        return borrowedBooks.remove(b);
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
-    // BUG: eksponerer ændringsbar liste (burde returnere en kopi eller unmodifiable)
     public List<Book> getBorrowedBooks() {
-        return borrowedBooks;
+        return Collections.unmodifiableList(borrowedBooks);
     }
 
-    // ____________________________________________________
+    // _________________________________________________________
 
     @Override
     public String toString() {
@@ -68,4 +62,4 @@ public class User {
                 '}';
     }
 
-} // Class End
+} // User Class End

@@ -4,89 +4,80 @@ package dk.school.library;
 // Imports
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Library {
 
     // Attributes
-
     private final List<Book> books = new ArrayList<>();
 
-    // ____________________________________________________
+    // _______________________________________________________
 
+    // Add book
     public void addBook(Book book) {
-        // BUG: tilføjer altid, selvom ISBN allerede findes (burde være idempotent på ISBN)
-        books.add(book);
+        if (!books.contains(book)) {
+            books.add(book);
+        }
     }
 
-    // ____________________________________________________
+    // _______________________________________________________
 
     public Book findByTitle(String title) {
         for (Book b : books) {
-            // BUG: bruger == og case-sensitive sammenligning
-            if (b.getTitle() == title) {
+            if (b.getTitle().equalsIgnoreCase(title)) {
                 return b;
             }
         }
         return null;
     }
 
-    // ____________________________________________________
+    // _______________________________________________________
 
     public boolean loanBook(String isbn, User user) {
         for (Book b : books) {
             if (b.getIsbn().equals(isbn) && !b.isLoaned()) {
-                // BUG: ændrer bogens tilstand før vi ved om user må låne
-                b.setLoaned(true);
-                boolean ok = user.borrowBook(b);
-                // BUG: vi glemmer at rollbacke hvis ok == false
-                return true;
+                if (user.borrowBook(b)) {
+                    b.setLoaned(true);
+                    return true;
+                }
+                return false;
             }
         }
         return false;
     }
 
-    // ____________________________________________________
+    // _______________________________________________________
 
     public void returnBook(Book book, User user) {
-        // BUG: antager at contains bruger korrekt equals; fjerner ikke sikkert
-        if (user.getBorrowedBooks().contains(book)) {
+        if (user.hasBook(book)) {
             book.setLoaned(false);
-            user.getBorrowedBooks().remove(book);
+            user.returnBook(book);
         }
     }
 
-    // ____________________________________________________
+    // _______________________________________________________
 
     public List<Book> availableBooks() {
-
-        List<Book> result = new ArrayList<>();
-        for (Book b : books) {
-            // BUG: inverteret logik
-            if (b.isLoaned()) {
-                result.add(b);
-            }
-        }
-        return result;
-    }
-
-    // ____________________________________________________
-
-    // Bonus: simpel søgning - med bugs
-    public List<Book> search(String query) {
-        // BUG: case-sensitive og kun titel
         return books.stream()
-                .filter(b -> b.getTitle().contains(query))
+                .filter(b -> !b.isLoaned())
                 .collect(Collectors.toList());
     }
 
-    // ____________________________________________________
+    // _______________________________________________________
+
+    public List<Book> search(String query) {
+        String q = query.toLowerCase();
+        return books.stream()
+                .filter(b -> b.getTitle().toLowerCase().contains(q)
+                        || b.getAuthor().toLowerCase().contains(q))
+                .collect(Collectors.toList());
+    }
+
+    // _______________________________________________________
 
     public List<Book> getAllBooks() {
         return Collections.unmodifiableList(books);
     }
 
-} // Class End
+} // Library Class End
