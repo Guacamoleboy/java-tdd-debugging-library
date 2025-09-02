@@ -1,5 +1,7 @@
+// Packages
 package dk.school.library;
 
+// Imports
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,12 +10,19 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Library {
+
+    // Attributes
+
     private final List<Book> books = new ArrayList<>();
+
+    // ____________________________________________________
 
     public void addBook(Book book) {
         // BUG: tilføjer altid, selvom ISBN allerede findes (burde være idempotent på ISBN)
         books.add(book);
     }
+
+    // ____________________________________________________
 
     public Book findByTitle(String title) {
         for (Book b : books) {
@@ -24,6 +33,8 @@ public class Library {
         }
         return null;
     }
+
+    // ____________________________________________________
 
     public boolean loanBook(String isbn, User user) {
         for (Book b : books) {
@@ -38,6 +49,8 @@ public class Library {
         return false;
     }
 
+    // ____________________________________________________
+
     public void returnBook(Book book, User user) {
         // BUG: antager at contains bruger korrekt equals; fjerner ikke sikkert
         if (user.getBorrowedBooks().contains(book)) {
@@ -46,7 +59,10 @@ public class Library {
         }
     }
 
+    // ____________________________________________________
+
     public List<Book> availableBooks() {
+
         List<Book> result = new ArrayList<>();
         for (Book b : books) {
             // BUG: inverteret logik
@@ -57,6 +73,8 @@ public class Library {
         return result;
     }
 
+    // ____________________________________________________
+
     // Bonus: simpel søgning - med bugs
     public List<Book> search(String query) {
         // BUG: case-sensitive og kun titel
@@ -65,7 +83,10 @@ public class Library {
                 .collect(Collectors.toList());
     }
 
+    // ____________________________________________________
+
     public List<Book> getAllBooks() {
         return Collections.unmodifiableList(books);
     }
-}
+
+} // Class End

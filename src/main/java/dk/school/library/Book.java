@@ -1,12 +1,19 @@
+// Packages
 package dk.school.library;
 
+// Imports
 import java.util.Objects;
 
 public class Book {
+
+    // Attributes
+
     private String title;
     private String author;
     private String isbn;
     private boolean loaned;
+
+    // ____________________________________________________
 
     public Book(String title, String author, String isbn) {
         this.title = title;
@@ -15,17 +22,37 @@ public class Book {
         this.loaned = false;
     }
 
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-    public String getIsbn() { return isbn; }
+    // ____________________________________________________
+
+    public String getTitle() {
+        return title;
+    }
+
+    // ____________________________________________________
+
+    public String getAuthor() {
+        return author;
+    }
+
+    // ____________________________________________________
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    // ____________________________________________________
 
     public void setLoaned(boolean loaned) {
         this.loaned = loaned;
     }
 
+    // ____________________________________________________
+
     public boolean isLoaned() {
         return loaned;
     }
+
+    // ____________________________________________________
 
     // BUG 1: equals sammenligner titel (og bruger ==) i stedet for ISBN og equals
     @Override
@@ -36,11 +63,15 @@ public class Book {
         return this.title == other.title; // forkert og subtil ift. kravene
     }
 
+    // ____________________________________________________
+
     // BUG 2: hashCode er inkonsistent med equals og afhænger af author
     @Override
     public int hashCode() {
         return Objects.hash(author); // burde baseres på ISBN
     }
+
+    // ____________________________________________________
 
     @Override
     public String toString() {
@@ -51,4 +82,5 @@ public class Book {
                 ", loaned=" + loaned +
                 '}';
     }
-}
+
+} // Class End

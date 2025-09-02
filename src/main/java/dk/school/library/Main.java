@@ -1,9 +1,17 @@
+// Packages
 package dk.school.library;
 
+// Imports
 import java.util.List;
 
 public class Main {
+
+    // Attributes
+
+    // ____________________________________________________
+
     public static void main(String[] args) {
+
         Library lib = new Library();
         lib.addBook(new Book("Clean Code", "Robert C. Martin", "9780132350884"));
         lib.addBook(new Book("Effective Java", "Joshua Bloch", "9780134685991"));
@@ -22,5 +30,7 @@ public class Main {
             lib.returnBook(b, alice); // kan fejle pga equals/contains bugs
         }
         System.out.println("After return attempt, available: " + lib.availableBooks());
+
     }
-}
+
+} // Main Class End
